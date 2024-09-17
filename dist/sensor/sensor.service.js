@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 let SensorService = class SensorService {
     constructor() {
         this.sensors = [];
+        this.currentId = 1;
     }
     findAll() {
         return this.sensors;
@@ -21,7 +22,11 @@ let SensorService = class SensorService {
     findBySensorType(sensorType) {
         return this.sensors.filter(sensor => sensor.sensor_type === sensorType);
     }
+    findByLocationType(locationType) {
+        return this.sensors.filter(sensor => sensor.location_type === locationType);
+    }
     create(sensor) {
+        sensor.id = this.currentId++;
         this.sensors.push(sensor);
         return sensor;
     }

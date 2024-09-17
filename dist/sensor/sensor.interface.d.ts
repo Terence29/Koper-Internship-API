@@ -4,4 +4,5 @@ export interface Sensor {
     value: number;
     unit: string;
     sensor_type: string;
+    location_type: string;
 }

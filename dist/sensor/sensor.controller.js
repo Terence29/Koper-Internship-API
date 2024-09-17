@@ -37,6 +37,9 @@ let SensorController = class SensorController {
     findBySensorType(sensorType) {
         return this.sensorService.findBySensorType(sensorType);
     }
+    findByLocationType(locationType) {
+        return this.sensorService.findByLocationType(locationType);
+    }
 };
 exports.SensorController = SensorController;
 __decorate([
@@ -81,6 +84,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Array)
 ], SensorController.prototype, "findBySensorType", null);
+__decorate([
+    (0, common_1.Get)('location/:location_type'),
+    __param(0, (0, common_1.Param)('location_type')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Array)
+], SensorController.prototype, "findByLocationType", null);
 exports.SensorController = SensorController = __decorate([
     (0, common_1.Controller)('sensors'),
     __metadata("design:paramtypes", [sensor_service_1.SensorService])

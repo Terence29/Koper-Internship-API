@@ -4,6 +4,7 @@ import { Sensor } from './sensor.interface';
 @Injectable()
 export class SensorService {
   private sensors: Sensor[] = [];
+  private currentId = 1;
 
   findAll(): Sensor[] {
     return this.sensors;
@@ -17,7 +18,12 @@ export class SensorService {
     return this.sensors.filter(sensor => sensor.sensor_type === sensorType);
   }
 
+  findByLocationType(locationType: string): Sensor[] {
+    return this.sensors.filter(sensor => sensor.location_type === locationType);
+  }
+
   create(sensor: Sensor): Sensor {
+    sensor.id = this.currentId++;
     this.sensors.push(sensor);
     return sensor;
   }

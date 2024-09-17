@@ -36,4 +36,9 @@ export class SensorController {
   findBySensorType(@Param('sensor_type') sensorType: string): Sensor[] {
     return this.sensorService.findBySensorType(sensorType);
   }
+
+  @Get('location/:location_type')
+  findByLocationType(@Param('location_type') locationType: string): Sensor[] {
+    return this.sensorService.findByLocationType(locationType);
+  }
 }

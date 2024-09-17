@@ -9,4 +9,5 @@ export declare class SensorController {
     update(id: string, sensor: Sensor): Sensor;
     delete(id: string): void;
     findBySensorType(sensorType: string): Sensor[];
+    findByLocationType(locationType: string): Sensor[];
 }
