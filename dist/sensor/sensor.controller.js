@@ -15,15 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SensorController = void 0;
 const common_1 = require("@nestjs/common");
 const sensor_service_1 = require("./sensor.service");
+const sensor_utils_1 = require("./sensor.utils");
 let SensorController = class SensorController {
     constructor(sensorService) {
         this.sensorService = sensorService;
     }
     findAll() {
-        return this.sensorService.findAll();
+        const sensors = this.sensorService.findAll();
+        return sensors.map(sensor => (0, sensor_utils_1.addHateoasLinks)(sensor));
     }
     findOne(id) {
-        return this.sensorService.findOne(Number(id));
+        const sensor = this.sensorService.findOne(Number(id));
+        return (0, sensor_utils_1.addHateoasLinks)(sensor);
     }
     create(sensors) {
         return sensors.map(sensor => this.sensorService.create(sensor));
@@ -35,10 +38,12 @@ let SensorController = class SensorController {
         this.sensorService.delete(Number(id));
     }
     findBySensorType(sensorType) {
-        return this.sensorService.findBySensorType(sensorType);
+        const sensors = this.sensorService.findBySensorType(sensorType);
+        return sensors.map(sensor => (0, sensor_utils_1.addHateoasLinks)(sensor));
     }
     findByLocationType(locationType) {
-        return this.sensorService.findByLocationType(locationType);
+        const sensors = this.sensorService.findByLocationType(locationType);
+        return sensors.map(sensor => (0, sensor_utils_1.addHateoasLinks)(sensor));
     }
 };
 exports.SensorController = SensorController;
@@ -46,7 +51,7 @@ __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Array)
+    __metadata("design:returntype", Object)
 ], SensorController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
@@ -82,14 +87,14 @@ __decorate([
     __param(0, (0, common_1.Param)('sensor_type')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Array)
+    __metadata("design:returntype", Object)
 ], SensorController.prototype, "findBySensorType", null);
 __decorate([
     (0, common_1.Get)('location/:location_type'),
     __param(0, (0, common_1.Param)('location_type')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Array)
+    __metadata("design:returntype", Object)
 ], SensorController.prototype, "findByLocationType", null);
 exports.SensorController = SensorController = __decorate([
     (0, common_1.Controller)('sensors'),

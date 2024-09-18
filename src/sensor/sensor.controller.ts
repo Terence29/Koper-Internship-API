@@ -1,19 +1,22 @@
 import { Controller, Get, Param, Body, Post, Put, Delete } from '@nestjs/common';
 import { SensorService } from './sensor.service';
 import { Sensor } from './sensor.interface';
+import { addHateoasLinks } from './sensor.utils';
 
 @Controller('sensors')
 export class SensorController {
   constructor(private readonly sensorService: SensorService) {}
 
   @Get()
-  findAll(): Sensor[] {
-    return this.sensorService.findAll();
+  findAll(): any {
+    const sensors = this.sensorService.findAll();
+    return sensors.map(sensor => addHateoasLinks(sensor));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Sensor {
-    return this.sensorService.findOne(Number(id));
+  findOne(@Param('id') id: string): any {
+    const sensor = this.sensorService.findOne(Number(id));
+    return addHateoasLinks(sensor);
   }
 
   @Post()
@@ -31,14 +34,15 @@ export class SensorController {
     this.sensorService.delete(Number(id));
   }
 
-  // New route to find by sensor_type
   @Get('type/:sensor_type')
-  findBySensorType(@Param('sensor_type') sensorType: string): Sensor[] {
-    return this.sensorService.findBySensorType(sensorType);
+  findBySensorType(@Param('sensor_type') sensorType: string): any {
+    const sensors = this.sensorService.findBySensorType(sensorType);
+    return sensors.map(sensor => addHateoasLinks(sensor));
   }
 
   @Get('location/:location_type')
-  findByLocationType(@Param('location_type') locationType: string): Sensor[] {
-    return this.sensorService.findByLocationType(locationType);
+  findByLocationType(@Param('location_type') locationType: string): any {
+    const sensors = this.sensorService.findByLocationType(locationType);
+    return sensors.map(sensor => addHateoasLinks(sensor));
   }
 }
