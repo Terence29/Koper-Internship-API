@@ -5,5 +5,6 @@ export interface Sensor {
     unit: string;
     sensor_type: string;
     location_type: string;
+    created_at?: Date;
   }
   

@@ -23,9 +23,13 @@ export class SensorService {
   }
 
   create(sensor: Sensor): Sensor {
-    sensor.id = this.currentId++;
-    this.sensors.push(sensor);
-    return sensor;
+    const newSensor: Sensor = {
+      ...sensor,
+      id: this.currentId++,
+      created_at: new Date(),
+    };
+    this.sensors.push(newSensor);
+    return newSensor;
   }
 
   update(id: number, updatedSensor: Sensor): Sensor {
