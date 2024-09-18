@@ -26,7 +26,7 @@ function addHateoasLinks(sensor) {
     };
     let typeSpecificLinks = {};
     switch (sensor.sensor_type) {
-        case 'temperature':
+        case 'Temperature':
             typeSpecificLinks = {
                 calibrate: {
                     href: `/sensors/${sensor.id}/calibrate`,
@@ -39,8 +39,37 @@ function addHateoasLinks(sensor) {
                     description: 'Check if the temperature is within the allowed range',
                 },
             };
+            let adviceLinks = {};
+            if (sensor.value < 5) {
+                adviceLinks = {
+                    advice: {
+                        href: '/actions/turn-on-heater',
+                        method: 'POST',
+                        description: 'It is too cold. Consider turning on the heater.',
+                    },
+                };
+            }
+            else if (sensor.value > 30) {
+                adviceLinks = {
+                    advice: {
+                        href: '/actions/turn-on-air-conditioning',
+                        method: 'POST',
+                        description: 'It is too hot. Consider turning on the air conditioning.',
+                    },
+                };
+            }
+            else {
+                adviceLinks = {
+                    advice: {
+                        href: '/actions/no-action-needed',
+                        method: 'GET',
+                        description: 'The temperature is normal. No action is required.',
+                    },
+                };
+            }
+            typeSpecificLinks = { ...typeSpecificLinks, ...adviceLinks };
             break;
-        case 'humidity':
+        case 'Humidity':
             typeSpecificLinks = {
                 resetHumidity: {
                     href: `/sensors/${sensor.id}/reset-humidity`,
@@ -49,7 +78,7 @@ function addHateoasLinks(sensor) {
                 },
             };
             break;
-        case 'light':
+        case 'Light':
             typeSpecificLinks = {
                 adjustBrightness: {
                     href: `/sensors/${sensor.id}/adjust-brightness`,
