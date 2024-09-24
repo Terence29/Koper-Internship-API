@@ -1,10 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { Sensor } from './sensor.interface';
+import { MqttProtocol } from './sensor.interface';
 
 @Injectable()
 export class SensorService {
   private sensors: Sensor[] = [];
   private currentId = 1;
+  private protocol: MqttProtocol[] = [
+    {
+      "clientId": '1',
+      "name": "Broker Mosquitto",
+      "topic": "a",
+      "url": "INTERN"
+    }
+  ];
 
   findAll(): Sensor[] {
     return this.sensors;
