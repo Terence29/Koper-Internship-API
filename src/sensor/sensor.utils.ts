@@ -10,11 +10,11 @@ class SensorUtils {
 
   public async loadSensorAdviceFromExcel() {
     const workbook = new Workbook();
-    
-    await workbook.xlsx.readFile('/Users/romaintmc/Koper-Internship-API-Loc/sensor-api/data/sensor-data.xlsx');
+    // Load rules from an .xlsx file
+    await workbook.xlsx.readFile('./data/sensor-data.xlsx');
     
     const worksheet = workbook.getWorksheet(1);
-
+  
     worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
       if (rowNumber === 1) return; 
 
@@ -68,11 +68,13 @@ export async function addHateoasLinks(sensor: Sensor): Promise<any> {
       method: 'DELETE',
     },
     findByType: {
-      href: `/sensors/type/${sensor.type}`,
+      href: `/sensors/`,
+      params: `${sensor.type}`,
       method: 'GET',
     },
     findByLocation: {
-      href: `/sensors/location/${sensor.location}`,
+      href: `/sensors/`,
+      params: `${sensor.location}`,
       method: 'GET',
     },
   };

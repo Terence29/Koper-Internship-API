@@ -23,7 +23,7 @@ let SensorController = class SensorController {
     async findAll() {
         const sensors = await this.sensorService.findAll();
         const sensorsWithLinks = await Promise.all(sensors.map(sensor => (0, sensor_utils_1.addHateoasLinks)(sensor)));
-        console.log('Capteurs avec conseils:', sensorsWithLinks);
+        console.log('Here');
         return sensorsWithLinks;
     }
     findOne(id) {

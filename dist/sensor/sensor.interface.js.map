@@ -1,1 +1,1 @@
-{"version":3,"file":"sensor.interface.js","sourceRoot":"","sources":["../../src/sensor/sensor.interface.ts"],"names":[],"mappings":";;;AAYA,MAAa,iBAAiB;IAA9B;QAIE,SAAI,GAAW,GAAG,CAAC;QACnB,SAAI,GAAW,aAAa,CAAC;IAG/B,CAAC;CAAA;AARD,8CAQC;AAED,MAAa,cAAc;IAA3B;QAIE,SAAI,GAAW,GAAG,CAAC;QACnB,SAAI,GAAW,UAAU,CAAC;IAG5B,CAAC;CAAA;AARD,wCAQC;AAQD,MAAa,YAAY;CAMxB;AAND,oCAMC"}
+{"version":3,"file":"sensor.interface.js","sourceRoot":"","sources":["../../src/sensor/sensor.interface.ts"],"names":[],"mappings":""}

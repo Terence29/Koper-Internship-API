@@ -12,6 +12,14 @@ let SensorService = class SensorService {
     constructor() {
         this.sensors = [];
         this.currentId = 1;
+        this.protocol = [
+            {
+                "clientId": '1',
+                "name": "Broker Mosquitto",
+                "topic": "a",
+                "url": "INTERN"
+            }
+        ];
     }
     findAll() {
         return this.sensors;

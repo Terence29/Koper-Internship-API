@@ -15,9 +15,9 @@ let DataExchangeModule = class DataExchangeModule {
 exports.DataExchangeModule = DataExchangeModule;
 exports.DataExchangeModule = DataExchangeModule = __decorate([
     (0, common_1.Module)({
-        controllers: [data_exchange_controller_1.DataExchangeController],
-        providers: [data_exchange_service_1.DataExchangeService],
-        exports: [data_exchange_service_1.DataExchangeService]
+        controllers: [data_exchange_controller_1.DataExchangeController, data_exchange_controller_1.MqttController],
+        providers: [data_exchange_service_1.DataExchangeService, data_exchange_service_1.MqttBrokerService],
+        exports: [data_exchange_service_1.DataExchangeService, data_exchange_service_1.MqttBrokerService]
     })
 ], DataExchangeModule);
 //# sourceMappingURL=data-exchange.module.js.map

@@ -1,9 +1,13 @@
-import { MqttClient } from 'mqtt/*';
-import { Sensor, MqttProtocol } from 'src/sensor/sensor.interface';
+import { MqttProtocol } from 'src/sensor/sensor.interface';
 export declare class DataExchangeService {
 }
-export declare class MqttService {
-    readonly mqtt: MqttClient;
-    subscribe(): void;
-    getData(sensor: Sensor, protocol: MqttProtocol): (Sensor | MqttProtocol)[];
+export declare class MqttBrokerService {
+    private brokers;
+    private messageStore;
+    private readonly logger;
+    addBroker(mqttProtocol: MqttProtocol): void;
+    subscribeToTopic(mqttProtocol: MqttProtocol): void;
+    private setMessage;
+    getMessage(clientId: string): string;
+    deleteBroker(mqttProtocol: MqttProtocol): void;
 }

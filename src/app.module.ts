@@ -2,11 +2,10 @@
 import { Module } from '@nestjs/common';
 import { SensorModule } from './sensor/sensor.module';
 import { DataExchangeModule } from './data-exchange/data-exchange.module';
-
-@Module({
-  imports: [SensorModule, DataExchangeModule],
+import { HttpModule } from '@nestjs/axios';@Module({
+  imports: [SensorModule, DataExchangeModule, HttpModule],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+Communicationexport class AppModule {}
 

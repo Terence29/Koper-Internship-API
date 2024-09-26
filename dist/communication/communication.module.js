@@ -6,20 +6,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.CommunicationModule = void 0;
 const common_1 = require("@nestjs/common");
-const sensor_module_1 = require("./sensor/sensor.module");
-const data_exchange_module_1 = require("./data-exchange/data-exchange.module");
+const communication_controller_1 = require("./communication.controller");
+const communication_service_1 = require("./communication.service");
+const data_exchange_module_1 = require("../data-exchange/data-exchange.module");
 const axios_1 = require("@nestjs/axios");
-const communication_module_1 = require("./communication/communication.module");
-let AppModule = class AppModule {
+let CommunicationModule = class CommunicationModule {
 };
-exports.AppModule = AppModule;
-exports.AppModule = AppModule = __decorate([
+exports.CommunicationModule = CommunicationModule;
+exports.CommunicationModule = CommunicationModule = __decorate([
     (0, common_1.Module)({
-        imports: [sensor_module_1.SensorModule, data_exchange_module_1.DataExchangeModule, axios_1.HttpModule, communication_module_1.CommunicationModule],
-        controllers: [],
-        providers: [],
+        imports: [axios_1.HttpModule, data_exchange_module_1.DataExchangeModule],
+        controllers: [communication_controller_1.CommunicationController],
+        providers: [communication_service_1.CommunicationService]
     })
-], AppModule);
-//# sourceMappingURL=app.module.js.map
+], CommunicationModule);
+//# sourceMappingURL=communication.module.js.map

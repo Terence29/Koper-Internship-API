@@ -11,12 +11,13 @@ const common_1 = require("@nestjs/common");
 const sensor_controller_1 = require("./sensor.controller");
 const sensor_service_1 = require("./sensor.service");
 const data_exchange_module_1 = require("../data-exchange/data-exchange.module");
+const axios_1 = require("@nestjs/axios");
 let SensorModule = class SensorModule {
 };
 exports.SensorModule = SensorModule;
 exports.SensorModule = SensorModule = __decorate([
     (0, common_1.Module)({
-        imports: [data_exchange_module_1.DataExchangeModule],
+        imports: [axios_1.HttpModule, data_exchange_module_1.DataExchangeModule],
         controllers: [sensor_controller_1.SensorController],
         providers: [sensor_service_1.SensorService]
     })

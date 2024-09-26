@@ -9,31 +9,31 @@ class SensorUtils {
     }
     async loadSensorAdviceFromExcel() {
         const workbook = new exceljs_1.Workbook();
-        await workbook.xlsx.readFile('/Users/romaintmc/Koper-Internship-API-Loc/sensor-api/data/sensor-data.xlsx');
+        await workbook.xlsx.readFile('./data/sensor-data.xlsx');
         const worksheet = workbook.getWorksheet(1);
         worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
             if (rowNumber === 1)
                 return;
-            const sensorType = row.getCell(1).value;
+            const type = row.getCell(1).value;
             const minValue = row.getCell(2).value;
             const maxValue = row.getCell(3).value;
             const adviceLink = row.getCell(4).value;
             const rangeKey = `${minValue}-${maxValue}`;
-            if (!adviceLinks[sensorType]) {
-                adviceLinks[sensorType] = {};
+            if (!adviceLinks[type]) {
+                adviceLinks[type] = {};
             }
-            adviceLinks[sensorType][rangeKey] = adviceLink;
+            adviceLinks[type][rangeKey] = adviceLink;
         });
     }
-    getAdviceLinks(sensorType, sensorValue) {
-        const sensorAdvice = adviceLinks[sensorType];
+    getAdviceLinks(type, value) {
+        const sensorAdvice = adviceLinks[type];
         const adviceList = [];
         if (!sensorAdvice) {
             return adviceList;
         }
         for (const range in sensorAdvice) {
             const [min, max] = range.split('-').map(Number);
-            if (sensorValue >= min && sensorValue <= max) {
+            if (value >= min && value <= max) {
                 adviceList.push(sensorAdvice[range]);
             }
         }
@@ -55,11 +55,13 @@ async function addHateoasLinks(sensor) {
             method: 'DELETE',
         },
         findByType: {
-            href: `/sensors/type/${sensor.type}`,
+            href: `/sensors/`,
+            params: `${sensor.type}`,
             method: 'GET',
         },
         findByLocation: {
-            href: `/sensors/location/${sensor.location}`,
+            href: `/sensors/`,
+            params: `${sensor.location}`,
             method: 'GET',
         },
     };

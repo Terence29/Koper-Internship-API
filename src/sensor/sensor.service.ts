@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Sensor } from './sensor.interface';
 import { MqttProtocol } from './sensor.interface';
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class SensorService {

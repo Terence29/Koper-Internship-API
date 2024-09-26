@@ -3,6 +3,7 @@ import { SensorService } from './sensor.service';
 import { Sensor } from './sensor.interface';
 import { addHateoasLinks } from './sensor.utils';
 
+
 @Controller('sensors')
 export class SensorController {
   constructor(private readonly sensorService: SensorService) {}
@@ -12,18 +13,13 @@ export class SensorController {
     const sensors = await this.sensorService.findAll();
     const sensorsWithLinks = await Promise.all(sensors.map(sensor => addHateoasLinks(sensor)));
   
-    console.log('Capteurs avec conseils:', sensorsWithLinks);
+    console.log('Here');
     return sensorsWithLinks;
   }
 
   @Get(':id')
   findOne(@Param('id') id: string): any {
     const sensor = this.sensorService.findOne(Number(id));
-
-
-
-
-    
     return addHateoasLinks(sensor);
   }
 
