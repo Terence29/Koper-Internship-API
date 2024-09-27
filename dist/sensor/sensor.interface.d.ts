@@ -1,4 +1,3 @@
-import { Transport } from "@nestjs/microservices";
 import { IClientOptions } from 'mqtt';
 export interface Sensor {
     id: number;
@@ -12,7 +11,6 @@ export interface Sensor {
 export interface MqttProtocol extends IClientOptions {
     clientId?: string;
     name: string;
-    transport?: Transport.MQTT;
     topic: string;
     url: string;
     username?: string;

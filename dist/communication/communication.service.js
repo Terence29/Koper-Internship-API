@@ -19,7 +19,7 @@ let CommunicationService = class CommunicationService {
     }
     async getDataFromPi2() {
         try {
-            const response = await (0, rxjs_1.lastValueFrom)(this.httpService.get('http://10.180.150.94:3000/sensors'));
+            const response = await (0, rxjs_1.lastValueFrom)(this.httpService.get('http://10.180.150.76:3000/sensors'));
             return response.data;
         }
         catch (error) {

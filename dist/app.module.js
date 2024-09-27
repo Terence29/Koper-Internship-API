@@ -9,9 +9,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const sensor_module_1 = require("./sensor/sensor.module");
+const communication_module_1 = require("./communication/communication.module");
 const data_exchange_module_1 = require("./data-exchange/data-exchange.module");
 const axios_1 = require("@nestjs/axios");
-const communication_module_1 = require("./communication/communication.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;

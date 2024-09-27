@@ -9,7 +9,7 @@ export class CommunicationService {
 
     async getDataFromPi2(): Promise<any> {
         try {
-            const response = await lastValueFrom(this.httpService.get('http://10.180.150.94:3000/sensors'));
+            const response = await lastValueFrom(this.httpService.get('http://10.180.150.76:3000/sensors'));
             return response.data;
         }
         catch (error) {

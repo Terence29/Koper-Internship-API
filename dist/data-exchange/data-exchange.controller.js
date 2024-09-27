@@ -12,17 +12,23 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataExchangeController = exports.MqttController = void 0;
+exports.MqttController = exports.DataExchangeController = void 0;
 const common_1 = require("@nestjs/common");
-const Interface = require("../sensor/sensor.interface");
 const data_exchange_service_1 = require("./data-exchange.service");
+let DataExchangeController = class DataExchangeController {
+};
+exports.DataExchangeController = DataExchangeController;
+exports.DataExchangeController = DataExchangeController = __decorate([
+    (0, common_1.Controller)('data-exchange')
+], DataExchangeController);
 let MqttController = class MqttController {
-    constructor(mqttBrokerService) {
-        this.mqttBrokerService = mqttBrokerService;
+    constructor(dataExchangeService) {
+        this.dataExchangeService = dataExchangeService;
     }
-    addBroker(protocol) {
-        this.mqttBrokerService.addBroker(protocol);
-        return `Broker ${protocol.clientId} added.`;
+    addSensor(body) {
+        const { protocol, sensor } = body;
+        this.dataExchangeService.addSensor(protocol, sensor);
+        return `Added ${sensor} with protocol ${protocol}.`;
     }
 };
 exports.MqttController = MqttController;
@@ -32,15 +38,9 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], MqttController.prototype, "addBroker", null);
+], MqttController.prototype, "addSensor", null);
 exports.MqttController = MqttController = __decorate([
     (0, common_1.Controller)('mqtt'),
-    __metadata("design:paramtypes", [data_exchange_service_1.MqttBrokerService])
+    __metadata("design:paramtypes", [data_exchange_service_1.DataExchangeService])
 ], MqttController);
-let DataExchangeController = class DataExchangeController {
-};
-exports.DataExchangeController = DataExchangeController;
-exports.DataExchangeController = DataExchangeController = __decorate([
-    (0, common_1.Controller)('data-exchange')
-], DataExchangeController);
 //# sourceMappingURL=data-exchange.controller.js.map

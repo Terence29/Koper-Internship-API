@@ -1,9 +1,12 @@
 import * as Interface from 'src/sensor/sensor.interface';
-import { MqttBrokerService } from './data-exchange.service';
-export declare class MqttController {
-    private readonly mqttBrokerService;
-    constructor(mqttBrokerService: MqttBrokerService);
-    addBroker(protocol: Interface.MqttProtocol): string;
-}
+import { DataExchangeService } from './data-exchange.service';
 export declare class DataExchangeController {
+}
+export declare class MqttController {
+    private readonly dataExchangeService;
+    constructor(dataExchangeService: DataExchangeService);
+    addSensor(body: {
+        protocol: string;
+        sensor: Interface.Sensor;
+    }): string;
 }

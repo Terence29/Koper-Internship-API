@@ -1,35 +1,23 @@
 import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
 import * as Interface from 'src/sensor/sensor.interface';
-import { MqttBrokerService } from './data-exchange.service';
-/*
-import { MessagePattern } from '@nestjs/microservices';
-*/
+import { MqttBrokerService, DataExchangeService } from './data-exchange.service';
 
 
-/*
-@Controller('mqtt')
-export class MqttController {
-    constructor(private readonly mqttService: MqttService) {}
-
-    @MessagePattern({command: 'getDataMqtt'})
-    getDataFromSensor(sensor : Interface.Sensor,protocol: Interface.MqttProtocol){
-        return this.mqttService.getData(sensor,protocol);
-    }
-}
-*/
+@Controller('data-exchange')
+export class DataExchangeController {}
 
 @Controller('mqtt')
 export class MqttController {
-  constructor(private readonly mqttBrokerService: MqttBrokerService) {}
+  constructor(private readonly dataExchangeService: DataExchangeService) {}
 
   @Post()
-  addBroker(@Body() protocol: Interface.MqttProtocol)
-    {
-        this.mqttBrokerService.addBroker(protocol);
-        return `Broker ${protocol.clientId} added.`;
-    }
+  addSensor(@Body() body: { protocol: string, sensor: Interface.Sensor }) {
+    const { protocol, sensor } = body;
+    this.dataExchangeService.addSensor(protocol, sensor);
+    return `Added ${sensor.id},${sensor.name} with protocol ${protocol}.`;
   }
 
+}
   //@Get()
   
     /*
@@ -59,5 +47,4 @@ export class MqttController {
   }
     */
 
-@Controller('data-exchange')
-export class DataExchangeController {}
+

@@ -1,0 +1,9 @@
+
+{
+    "clientId": "mqttClient",
+    "name": "Broker Mqtt",
+    "topic": "/data/zazazozo123",
+    "url": "mqtt://mqtt.eclipseprojects.io:1883",
+    "username": "",
+    "password": ""
+  }
