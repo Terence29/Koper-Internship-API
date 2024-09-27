@@ -12,41 +12,42 @@ export class SensorController {
   async findAll(): Promise<any> {
     const sensors = await this.sensorService.findAll();
     const sensorsWithLinks = await Promise.all(sensors.map(sensor => addHateoasLinks(sensor)));
-  
-    console.log('Here');
     return sensorsWithLinks;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): any {
-    const sensor = this.sensorService.findOne(Number(id));
-    return addHateoasLinks(sensor);
+  async findOne(@Param('id') id: string): Promise<Sensor[]> {
+    const sensor = await this.sensorService.findOne(Number(id));
+    return sensor ? addHateoasLinks(sensor) : null;
   }
 
   @Post()
-  create(@Body() sensors: Sensor[]): Sensor[] {
-    return sensors.map(sensor => this.sensorService.create(sensor));
+  async create(@Body() sensor: Sensor): Promise<any> {
+    const createdSensor = await this.sensorService.create(sensor);
+    return addHateoasLinks(createdSensor);
   }
+ 
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() sensor: Sensor): Sensor {
-    return this.sensorService.update(Number(id), sensor);
+  async update(@Param('id') id: string, @Body() sensor: Sensor): Promise<any> {
+    const updatedSensor = await this.sensorService.update(Number(id), sensor);
+    return updatedSensor ? addHateoasLinks(updatedSensor) : null;
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): void {
-    this.sensorService.delete(Number(id));
+  async delete(@Param('id') id: string): Promise<void> {
+    await this.sensorService.delete(Number(id));
   }
 
   @Get('type/:type')
-  findBySensorType(@Param('type') type: string): any {
-    const sensors = this.sensorService.findByType(type);
+  async findBySensorType(@Param('type') type: string): Promise<any> {
+    const sensors = await this.sensorService.findByType(type);
     return sensors.map(sensor => addHateoasLinks(sensor));
   }
 
   @Get('location/:location')
-  findByLocationType(@Param('location') location: string): any {
-    const sensors = this.sensorService.findByLocation(location);
+  async findByLocationType(@Param('location') location: string): Promise <any> {
+    const sensors = await this.sensorService.findByLocation(location);
     return sensors.map(sensor => addHateoasLinks(sensor));
   }
 }

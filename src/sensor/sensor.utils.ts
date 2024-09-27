@@ -1,3 +1,4 @@
+import { SensorEntity } from './sensor.entity';
 import { Sensor } from './sensor.interface';
 import { Workbook } from 'exceljs';
 
@@ -34,7 +35,7 @@ class SensorUtils {
     //console.log('Conseils chargés dans adviceLinks:', adviceLinks);
   }
 
-  public getAdviceLinks(type: string, value: number): string[] {
+  public getAdviceLinks(type: string, value: string): string[] {
     const sensorAdvice = adviceLinks[type];
     const adviceList: string[] = [];
   
@@ -44,7 +45,7 @@ class SensorUtils {
   
     for (const range in sensorAdvice) {
       const [min, max] = range.split('-').map(Number);
-      if (value >= min && value <= max) {
+      if (+value >= min && +value <= max) {
         adviceList.push(sensorAdvice[range]); 
       }
     }
@@ -53,18 +54,18 @@ class SensorUtils {
   }  
 }
 
-export async function addHateoasLinks(sensor: Sensor): Promise<any> {
+export async function addHateoasLinks(sensor: SensorEntity): Promise<any> {
   const baseLinks = {
     self: {
-      href: `/sensors/${sensor.id}`,
+      href: `/sensors/${sensor.sensor_id}`,
       method: 'GET',
     },
     update: {
-      href: `/sensors/${sensor.id}`,
+      href: `/sensors/${sensor.sensor_id}`,
       method: 'PUT',
     },
     delete: {
-      href: `/sensors/${sensor.id}`,
+      href: `/sensors/${sensor.sensor_id}`,
       method: 'DELETE',
     },
     findByType: {
@@ -82,7 +83,8 @@ export async function addHateoasLinks(sensor: Sensor): Promise<any> {
   const sensorUtils = new SensorUtils();
   await sensorUtils.loadSensorAdviceFromExcel();
 
-  const adviceLinks = sensorUtils.getAdviceLinks(sensor.type, sensor.value);
+  const adviceLinks = sensorUtils.getAdviceLinks(sensor.type, //sensor.value
+    "5");
 
   let adviceLinksForSensor = {};
   if (adviceLinks.length > 0) {

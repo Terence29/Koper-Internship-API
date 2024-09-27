@@ -11,27 +11,6 @@ export interface Sensor {
   created_at: Date;
 }
 
-/*export class TemperatureSensor implements Sensor {
-  id: number;
-  name: string;
-  value: number;
-  unit: string = 'C';
-  type: string = 'temperature';
-  location: string;
-  created_at: Date;
-}
-
-export class HumiditySensor implements Sensor {
-  id: number;
-  name: string;
-  value: number;
-  unit: string = '%';
-  type: string = 'humidity';
-  location: string;
-  created_at: Date;
-}*/
-// ------------------------------------------------------------ \\
-
 export interface MqttProtocol extends IClientOptions {
   clientId?: string;
   name: string;

@@ -23,7 +23,7 @@ export class MqttBrokerService
          this.logger.log(`Connected to broker ${mqttProtocol.clientId} at ${mqttProtocol.url}`);
        });
 
-       newClient.on('error', (error) => {
+       newClient.on('error', (error) => { // .on is because newClient is of type EventEmitter, 1st arg is the event flag
          this.logger.error(`Error in broker ${mqttProtocol.clientId}:`, error);
        });
 
@@ -89,7 +89,11 @@ export class DataExchangeService {
          const config = this.getConfig<MqttProtocol>("src/data-exchange/mqtt-config.json");
          this.mqttBrokerService.addBroker(config,sensor);
          this.mqttBrokerService.subscribeToTopic(config,sensor);
+         this.sensors[sensor.id]=sensor;
       }
+      /*
+      ADD OTHER PROTOCOLS
+      */
   }
 
   getConfig<T>(path: string): Partial<T> { // <T> makes it generic for every protocol implemented

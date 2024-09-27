@@ -1,13 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { SensorEntity } from './sensor.entity';  
 import { Sensor } from './sensor.interface';
 import { MqttProtocol } from './sensor.interface';
 import { HttpService } from '@nestjs/axios';
-import { lastValueFrom } from 'rxjs';
+import { async, lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class SensorService {
-  private sensors: Sensor[] = [];
-  private currentId = 1;
+  // Injecter le Repository pour SensorEntity
+  constructor(
+    @InjectRepository(SensorEntity)
+    private readonly sensorRepository: Repository<SensorEntity>,  // Le repository pour l'entité
+  ) {}
+
   private protocol: MqttProtocol[] = [
     {
       "clientId": '1',
@@ -17,43 +24,43 @@ export class SensorService {
     }
   ];
 
-  findAll(): Sensor[] {
-    return this.sensors;
+  async findAll(): Promise<SensorEntity[]> {
+    return await this.sensorRepository.find();
   }
 
-  findOne(id: number): Sensor {
-    return this.sensors.find(sensor => sensor.id === id);
+  async findOne(id: number): Promise<SensorEntity> {
+    return await this.sensorRepository.findOne({where : {sensor_id: id} });
   }
 
-  findByType(type: string): Sensor[] {
-    return this.sensors.filter(sensor => sensor.type === type);
+  async findByType(type: string): Promise<SensorEntity[]> {
+    return await this.sensorRepository.find({where : {type} });
   }
 
-  findByLocation(location: string): Sensor[] {
-    return this.sensors.filter(sensor => sensor.type === location);
+  async findByLocation(location: string): Promise<SensorEntity[]> {
+    return await this.sensorRepository.find({where : {location} });
   }
 
-  create(sensor: Sensor): Sensor {
-    const newSensor: Sensor = {
+  async create(sensor: Sensor): Promise<SensorEntity> {
+    const newSensor = this.sensorRepository.create({
       ...sensor,
-      id: this.currentId++,
       created_at: new Date(),
-    };
-    this.sensors.push(newSensor);
-    return newSensor;
+    });
+    return await this.sensorRepository.save(newSensor);
   }
 
-  update(id: number, updatedSensor: Sensor): Sensor {
-    const sensorIndex = this.sensors.findIndex(sensor => sensor.id === id);
-    if (sensorIndex >= 0) {
-      this.sensors[sensorIndex] = updatedSensor;
-      return updatedSensor;
+  async update(id: number, updatedSensor: Partial<Sensor>): Promise<SensorEntity> {
+    const sensor = await this.sensorRepository.findOne({ where: { sensor_id: id } });
+    if (sensor) {
+      // Supprimer l'ID de l'objet de mise à jour pour éviter les conflits
+      const { id: _, ...sensorData } = updatedSensor;      
+      await this.sensorRepository.update(id, sensorData);
+      return this.sensorRepository.findOne({ where: { sensor_id: id } });
     }
     return null;
-  }
+  }  
 
-  delete(id: number): void {
-    this.sensors = this.sensors.filter(sensor => sensor.id !== id);
+  async delete(id: number): Promise<void> {
+    await this.sensorRepository.delete(id);  // Supprimer le capteur
   }
 }
 
