@@ -4,12 +4,13 @@ import { SensorController } from './sensor.controller';
 import { SensorService } from './sensor.service';
 import { DataExchangeModule } from 'src/data-exchange/data-exchange.module';
 import { HttpModule } from '@nestjs/axios';
-import { SensorEntity } from './sensor.entity';
+import { SensorEntity } from './entity/sensor.entity';
+import { SensorUtils } from './sensor.utils'
 
 @Module({ 
   imports: [HttpModule, DataExchangeModule, TypeOrmModule.forFeature([SensorEntity])],
   controllers: [SensorController],
-  providers: [SensorService],
+  providers: [SensorService, SensorUtils],
 })
 export class SensorModule {}
 

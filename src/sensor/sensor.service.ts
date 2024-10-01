@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SensorEntity } from './sensor.entity';  
+import { SensorEntity } from './entity/sensor.entity';  
 import { Sensor } from './sensor.interface';
 import { MqttProtocol } from './sensor.interface';
 import { HttpService } from '@nestjs/axios';
@@ -25,19 +25,28 @@ export class SensorService {
   ];
 
   async findAll(): Promise<SensorEntity[]> {
-    return await this.sensorRepository.find();
+    return await this.sensorRepository.find({ relations : ['data']});
   }
 
   async findOne(id: number): Promise<SensorEntity> {
-    return await this.sensorRepository.findOne({where : {sensor_id: id} });
+    return await this.sensorRepository.findOne({
+      where : {sensor_id: id},
+      relations : ['data']
+    });
   }
 
   async findByType(type: string): Promise<SensorEntity[]> {
-    return await this.sensorRepository.find({where : {type} });
+    return await this.sensorRepository.find({
+      where : {type},
+      relations : ['data']
+    });
   }
 
   async findByLocation(location: string): Promise<SensorEntity[]> {
-    return await this.sensorRepository.find({where : {location} });
+    return await this.sensorRepository.find({
+      where : {location},
+      relations : ['data']
+    });
   }
 
   async create(sensor: Sensor): Promise<SensorEntity> {

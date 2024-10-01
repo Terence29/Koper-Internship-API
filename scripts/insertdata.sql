@@ -36,3 +36,5 @@ INSERT INTO Data (value, unit, sensor_id) VALUES
     (1100 ,"ppm", 16),
     (900 ,"ppm", 17),
     (2100 ,"Lux", 18);
+
+select * from Data d join Sensor s on s.sensor_id = d.sensor_id;

@@ -12,35 +12,29 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MqttController = exports.DataExchangeController = void 0;
+exports.DataExchangeController = void 0;
 const common_1 = require("@nestjs/common");
 const data_exchange_service_1 = require("./data-exchange.service");
 let DataExchangeController = class DataExchangeController {
-};
-exports.DataExchangeController = DataExchangeController;
-exports.DataExchangeController = DataExchangeController = __decorate([
-    (0, common_1.Controller)('data-exchange')
-], DataExchangeController);
-let MqttController = class MqttController {
     constructor(dataExchangeService) {
         this.dataExchangeService = dataExchangeService;
     }
     addSensor(body) {
         const { protocol, sensor } = body;
         this.dataExchangeService.addSensor(protocol, sensor);
-        return `Added ${sensor} with protocol ${protocol}.`;
+        return `Added ${sensor.id},${sensor.name} with protocol ${protocol}.`;
     }
 };
-exports.MqttController = MqttController;
+exports.DataExchangeController = DataExchangeController;
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], MqttController.prototype, "addSensor", null);
-exports.MqttController = MqttController = __decorate([
-    (0, common_1.Controller)('mqtt'),
+], DataExchangeController.prototype, "addSensor", null);
+exports.DataExchangeController = DataExchangeController = __decorate([
+    (0, common_1.Controller)('data-exchange'),
     __metadata("design:paramtypes", [data_exchange_service_1.DataExchangeService])
-], MqttController);
+], DataExchangeController);
 //# sourceMappingURL=data-exchange.controller.js.map

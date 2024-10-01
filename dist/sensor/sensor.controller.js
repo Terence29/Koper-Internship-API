@@ -23,28 +23,34 @@ let SensorController = class SensorController {
     async findAll() {
         const sensors = await this.sensorService.findAll();
         const sensorsWithLinks = await Promise.all(sensors.map(sensor => (0, sensor_utils_1.addHateoasLinks)(sensor)));
-        console.log('Here');
-        return sensorsWithLinks;
+        return sensors;
     }
-    findOne(id) {
-        const sensor = this.sensorService.findOne(Number(id));
-        return (0, sensor_utils_1.addHateoasLinks)(sensor);
+    async findOne(id) {
+        let data;
+        const sensor = await this.sensorService.findOne(Number(id));
+        return sensor ? (0, sensor_utils_1.addHateoasLinks)(sensor) : null;
     }
-    create(sensors) {
-        return sensors.map(sensor => this.sensorService.create(sensor));
+    async create(sensor) {
+        const createdSensor = await this.sensorService.create(sensor);
+        let data;
+        return (0, sensor_utils_1.addHateoasLinks)(createdSensor);
     }
-    update(id, sensor) {
-        return this.sensorService.update(Number(id), sensor);
+    async update(id, sensor) {
+        const updatedSensor = await this.sensorService.update(Number(id), sensor);
+        let data;
+        return updatedSensor ? (0, sensor_utils_1.addHateoasLinks)(updatedSensor) : null;
     }
-    delete(id) {
-        this.sensorService.delete(Number(id));
+    async delete(id) {
+        await this.sensorService.delete(Number(id));
     }
-    findBySensorType(type) {
-        const sensors = this.sensorService.findByType(type);
+    async findBySensorType(type) {
+        const sensors = await this.sensorService.findByType(type);
+        let data;
         return sensors.map(sensor => (0, sensor_utils_1.addHateoasLinks)(sensor));
     }
-    findByLocationType(location) {
-        const sensors = this.sensorService.findByLocation(location);
+    async findByLocationType(location) {
+        const sensors = await this.sensorService.findByLocation(location);
+        let data;
         return sensors.map(sensor => (0, sensor_utils_1.addHateoasLinks)(sensor));
     }
 };
@@ -60,14 +66,14 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Object)
+    __metadata("design:returntype", Promise)
 ], SensorController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Array]),
-    __metadata("design:returntype", Array)
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
 ], SensorController.prototype, "create", null);
 __decorate([
     (0, common_1.Put)(':id'),
@@ -75,28 +81,28 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Object)
+    __metadata("design:returntype", Promise)
 ], SensorController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SensorController.prototype, "delete", null);
 __decorate([
     (0, common_1.Get)('type/:type'),
     __param(0, (0, common_1.Param)('type')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Object)
+    __metadata("design:returntype", Promise)
 ], SensorController.prototype, "findBySensorType", null);
 __decorate([
     (0, common_1.Get)('location/:location'),
     __param(0, (0, common_1.Param)('location')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Object)
+    __metadata("design:returntype", Promise)
 ], SensorController.prototype, "findByLocationType", null);
 exports.SensorController = SensorController = __decorate([
     (0, common_1.Controller)('sensors'),

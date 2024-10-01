@@ -5,13 +5,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SensorService = void 0;
 const common_1 = require("@nestjs/common");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
+const sensor_entity_1 = require("./entity/sensor.entity");
 let SensorService = class SensorService {
-    constructor() {
-        this.sensors = [];
-        this.currentId = 1;
+    constructor(sensorRepository) {
+        this.sensorRepository = sensorRepository;
         this.protocol = [
             {
                 "clientId": '1',
@@ -21,41 +29,51 @@ let SensorService = class SensorService {
             }
         ];
     }
-    findAll() {
-        return this.sensors;
+    async findAll() {
+        return await this.sensorRepository.find({ relations: ['data'] });
     }
-    findOne(id) {
-        return this.sensors.find(sensor => sensor.id === id);
+    async findOne(id) {
+        return await this.sensorRepository.findOne({
+            where: { sensor_id: id },
+            relations: ['data']
+        });
     }
-    findByType(type) {
-        return this.sensors.filter(sensor => sensor.type === type);
+    async findByType(type) {
+        return await this.sensorRepository.find({
+            where: { type },
+            relations: ['data']
+        });
     }
-    findByLocation(location) {
-        return this.sensors.filter(sensor => sensor.type === location);
+    async findByLocation(location) {
+        return await this.sensorRepository.find({
+            where: { location },
+            relations: ['data']
+        });
     }
-    create(sensor) {
-        const newSensor = {
+    async create(sensor) {
+        const newSensor = this.sensorRepository.create({
             ...sensor,
-            id: this.currentId++,
             created_at: new Date(),
-        };
-        this.sensors.push(newSensor);
-        return newSensor;
+        });
+        return await this.sensorRepository.save(newSensor);
     }
-    update(id, updatedSensor) {
-        const sensorIndex = this.sensors.findIndex(sensor => sensor.id === id);
-        if (sensorIndex >= 0) {
-            this.sensors[sensorIndex] = updatedSensor;
-            return updatedSensor;
+    async update(id, updatedSensor) {
+        const sensor = await this.sensorRepository.findOne({ where: { sensor_id: id } });
+        if (sensor) {
+            const { id: _, ...sensorData } = updatedSensor;
+            await this.sensorRepository.update(id, sensorData);
+            return this.sensorRepository.findOne({ where: { sensor_id: id } });
         }
         return null;
     }
-    delete(id) {
-        this.sensors = this.sensors.filter(sensor => sensor.id !== id);
+    async delete(id) {
+        await this.sensorRepository.delete(id);
     }
 };
 exports.SensorService = SensorService;
 exports.SensorService = SensorService = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(sensor_entity_1.SensorEntity)),
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], SensorService);
 //# sourceMappingURL=sensor.service.js.map

@@ -10,14 +10,18 @@ exports.DataExchangeModule = void 0;
 const common_1 = require("@nestjs/common");
 const data_exchange_controller_1 = require("./data-exchange.controller");
 const data_exchange_service_1 = require("./data-exchange.service");
+const mqtt_broker_service_1 = require("./mqtt-broker/mqtt-broker.service");
+const tcp_service_1 = require("./tcp/tcp.service");
+const schedule_1 = require("@nestjs/schedule");
 let DataExchangeModule = class DataExchangeModule {
 };
 exports.DataExchangeModule = DataExchangeModule;
 exports.DataExchangeModule = DataExchangeModule = __decorate([
     (0, common_1.Module)({
-        controllers: [data_exchange_controller_1.DataExchangeController, data_exchange_controller_1.MqttController],
-        providers: [data_exchange_service_1.DataExchangeService, data_exchange_service_1.MqttBrokerService],
-        exports: [data_exchange_service_1.DataExchangeService, data_exchange_service_1.MqttBrokerService]
+        imports: [schedule_1.ScheduleModule.forRoot()],
+        controllers: [data_exchange_controller_1.DataExchangeController],
+        providers: [data_exchange_service_1.DataExchangeService, mqtt_broker_service_1.MqttBrokerService, tcp_service_1.TcpService],
+        exports: [data_exchange_service_1.DataExchangeService, mqtt_broker_service_1.MqttBrokerService]
     })
 ], DataExchangeModule);
 //# sourceMappingURL=data-exchange.module.js.map

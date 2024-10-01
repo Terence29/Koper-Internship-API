@@ -1,13 +1,15 @@
+import { Repository } from 'typeorm';
+import { SensorEntity } from './entity/sensor.entity';
 import { Sensor } from './sensor.interface';
 export declare class SensorService {
-    private sensors;
-    private currentId;
+    private readonly sensorRepository;
+    constructor(sensorRepository: Repository<SensorEntity>);
     private protocol;
-    findAll(): Sensor[];
-    findOne(id: number): Sensor;
-    findByType(type: string): Sensor[];
-    findByLocation(location: string): Sensor[];
-    create(sensor: Sensor): Sensor;
-    update(id: number, updatedSensor: Sensor): Sensor;
-    delete(id: number): void;
+    findAll(): Promise<SensorEntity[]>;
+    findOne(id: number): Promise<SensorEntity>;
+    findByType(type: string): Promise<SensorEntity[]>;
+    findByLocation(location: string): Promise<SensorEntity[]>;
+    create(sensor: Sensor): Promise<SensorEntity>;
+    update(id: number, updatedSensor: Partial<Sensor>): Promise<SensorEntity>;
+    delete(id: number): Promise<void>;
 }

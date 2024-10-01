@@ -1,4 +1,6 @@
+/// <reference types="node" />
 import { IClientOptions } from 'mqtt';
+import * as net from 'net';
 export interface Sensor {
     id: number;
     name: string;
@@ -15,4 +17,11 @@ export interface MqttProtocol extends IClientOptions {
     url: string;
     username?: string;
     password?: string;
+}
+export interface TcpProtocol extends net.TcpSocketConnectOpts {
+    id: string;
+    request: string;
+    name: string;
+    port: number;
+    host: string;
 }

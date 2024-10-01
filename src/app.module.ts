@@ -6,7 +6,8 @@ import { DataExchangeModule } from './data-exchange/data-exchange.module';
 import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SensorEntity } from './sensor/sensor.entity';
+import { SensorEntity } from './sensor/entity/sensor.entity';
+import { DataEntity } from './sensor/entity/data.entity';
 
 @Module({
   imports: [
@@ -25,12 +26,14 @@ import { SensorEntity } from './sensor/sensor.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [SensorEntity], 
-        synchronize: true,  // Permet de synchroniser automatiquement les entités avec la base de données
+        entities: [SensorEntity, DataEntity], 
+        cache: false,
+        logging: true,  // Active les logs SQL
+        synchronize: false,
       }),
       inject: [ConfigService]
   }),
-  TypeOrmModule.forFeature([SensorEntity]), // Importe les entités dans le module
+  TypeOrmModule.forFeature([SensorEntity, DataEntity]), // Importe les entités dans le module
 ],
   controllers: [],
   providers: [],
