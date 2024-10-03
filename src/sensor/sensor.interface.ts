@@ -3,16 +3,18 @@ import { IClientOptions } from 'mqtt';
 import * as net from 'net';
 
 export interface Sensor {
-  id: number;
+  sensor_id: number;
   name: string;
-  value: number;
-  unit: string;
   type: string;
   location: string;
   created_at: Date;
 }
 
-export interface MqttProtocol extends IClientOptions {
+export interface Protocol {
+  id : number;
+  name : string;
+}
+export interface MqttProtocol extends IClientOptions, Protocol {
   clientId?: string;
   name: string;
   topic: string;
@@ -21,8 +23,7 @@ export interface MqttProtocol extends IClientOptions {
   password?: string;
 }
 
-export interface TcpProtocol extends net.TcpSocketConnectOpts {
-  id: string;
+export interface TcpProtocol extends net.TcpSocketConnectOpts, Protocol {
   request : string;
   name: string;
   port: number;

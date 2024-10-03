@@ -1,4 +1,4 @@
-Koper Internship Api
+NestJS architecture for generic integration of sensor with HATEOAS suggestions​
 
 ## Description
 
@@ -9,6 +9,12 @@ It allows to retrieve data from various sensors (geolocation, type, etc.) and of
 
 ```bash
 $ npm install
+$ npm i -g @nestjs/cli
+$ npm install exceljs --save
+$ npm i --save @nestjs/microservices
+$ npm i --save mqtt
+$ npm i --save net
+
 ```
 
 ## Compile and run the project
@@ -53,9 +59,9 @@ DB_PASSWORD=dbpwdexample
 -Get data of one sensor by id (+suggestions)
 -Get data of all sensors by location (+suggestions)
 -Get data of all sensors by type (+suggestions)
--Create new sensor (+suggestions)
--Update existing sensor (+suggestions)
--Delete existing sensor (+suggestions)
+-Create new sensor
+-Update existing sensor
+-Delete existing sensor
 
 ## Technologies used
 

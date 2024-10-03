@@ -22,7 +22,7 @@ let DataExchangeController = class DataExchangeController {
     addSensor(body) {
         const { protocol, sensor } = body;
         this.dataExchangeService.addSensor(protocol, sensor);
-        return `Added ${sensor.id},${sensor.name} with protocol ${protocol}.`;
+        return `Added ${sensor.sensor_id},${sensor.name} with protocol ${protocol}.`;
     }
 };
 exports.DataExchangeController = DataExchangeController;

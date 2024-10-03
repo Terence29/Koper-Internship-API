@@ -18,28 +18,28 @@ let DataExchangeService = class DataExchangeService {
     constructor(mqttBrokerService, tcpService) {
         this.mqttBrokerService = mqttBrokerService;
         this.tcpService = tcpService;
-        this.sensors = [];
+        this.sensors = {};
     }
     addSensor(protocol, sensor) {
         if (protocol == "mqtt") {
-            if (this.sensors[sensor.id]) {
+            if (this.sensors[sensor.sensor_id]) {
                 return "Sensor already added";
             }
             else {
                 const config = this.getConfig("src/data-exchange/mqtt-config.json");
                 this.mqttBrokerService.addBroker(config, sensor);
-                this.sensors[sensor.id] = sensor;
+                this.sensors[sensor.sensor_id] = { sensor: sensor, protocol: protocol };
             }
         }
         if (protocol == "tcp") {
-            if (this.sensors[sensor.id]) {
+            if (this.sensors[sensor.sensor_id]) {
                 return "Sensor already added";
             }
             else {
                 const config = this.getConfig("src/data-exchange/tcp-config.json");
                 this.tcpService.connect(config, sensor);
                 this.tcpService.sendMessage(config, config.request);
-                this.sensors[sensor.id] = sensor;
+                this.sensors[sensor.sensor_id] = { sensor: sensor, protocol: protocol };
             }
         }
     }

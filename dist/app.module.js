@@ -38,7 +38,6 @@ exports.AppModule = AppModule = __decorate([
                     database: configService.get('DB_NAME'),
                     entities: [sensor_entity_1.SensorEntity, data_entity_1.DataEntity],
                     cache: false,
-                    logging: true,
                     synchronize: false,
                 }),
                 inject: [config_1.ConfigService]

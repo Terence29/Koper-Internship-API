@@ -17,7 +17,7 @@ export class SensorService {
 
   private protocol: MqttProtocol[] = [
     {
-      "clientId": '1',
+      "id": 1,
       "name": "Broker Mosquitto",
       "topic": "a",
       "url": "INTERN"
@@ -25,7 +25,12 @@ export class SensorService {
   ];
 
   async findAll(): Promise<SensorEntity[]> {
-    return await this.sensorRepository.find({ relations : ['data']});
+    const sensors = await this.sensorRepository.find({ relations : ['data']});
+
+    return sensors.map(sensor => ({
+      ...sensor,
+      data: sensor.data ?? [],  // Assigne un tableau vide si `data` est null ou undefined
+    }));
   }
 
   async findOne(id: number): Promise<SensorEntity> {
@@ -37,14 +42,14 @@ export class SensorService {
 
   async findByType(type: string): Promise<SensorEntity[]> {
     return await this.sensorRepository.find({
-      where : {type},
+      where : {type: type},
       relations : ['data']
     });
   }
 
   async findByLocation(location: string): Promise<SensorEntity[]> {
     return await this.sensorRepository.find({
-      where : {location},
+      where : {location: location},
       relations : ['data']
     });
   }
@@ -61,7 +66,7 @@ export class SensorService {
     const sensor = await this.sensorRepository.findOne({ where: { sensor_id: id } });
     if (sensor) {
       // Supprimer l'ID de l'objet de mise à jour pour éviter les conflits
-      const { id: _, ...sensorData } = updatedSensor;      
+      const { sensor_id: _, ...sensorData } = updatedSensor;      
       await this.sensorRepository.update(id, sensorData);
       return this.sensorRepository.findOne({ where: { sensor_id: id } });
     }

@@ -14,9 +14,6 @@ export class SensorEntity {
   type: string;
 
   @Column({ nullable: true })
-  unit: string;
-
-  @Column({ nullable: true })
   location: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

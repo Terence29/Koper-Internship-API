@@ -1,7 +1,7 @@
 {
-    "id": "tcp_client_1",
+    "id": 22,
     "name": "Test tcp client ",
-    "host" : "10.180.150.94",
+    "host" : "192.168.90.90",
     "port": "10000",
     "request" : "getDataFromTcp"    
 }

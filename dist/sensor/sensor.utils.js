@@ -15,6 +15,7 @@ const xlsx = require("xlsx");
 const path = require('path');
 const fs = require('fs');
 let adviceLinks = {};
+let globalSensorUtils = null;
 let SensorUtils = class SensorUtils {
     constructor() {
         this.loadSensorAdviceFromExcel();
@@ -106,6 +107,10 @@ async function addRandomHateoasLinks(sensor) {
 }
 exports.addRandomHateoasLinks = addRandomHateoasLinks;
 async function addHateoasLinks(sensor) {
+    if (!globalSensorUtils) {
+        globalSensorUtils = new SensorUtils();
+        await globalSensorUtils.loadSensorAdviceFromExcel();
+    }
     const baseLinks = {
         self: {
             href: `/sensors/${sensor.name}`,
@@ -119,21 +124,21 @@ async function addHateoasLinks(sensor) {
             href: `/sensors/${sensor.name}`,
             method: 'DELETE',
         },
-        findByType: {
+        type: {
             href: `/sensors/`,
             params: `${sensor.type}`,
             method: 'GET',
         },
-        findByLocation: {
+        location: {
             href: `/sensors/`,
             params: `${sensor.location}`,
             method: 'GET',
         },
     };
+    const firstData = sensor.data && sensor.data.length > 0 ? sensor.data[0] : null;
     const sensorUtils = new SensorUtils();
     await sensorUtils.loadSensorAdviceFromExcel();
-    console.log(sensor.data);
-    const adviceLinks = sensorUtils.getAdviceLinks(sensor.type, sensor.data.values[1]);
+    const adviceLinks = firstData ? sensorUtils.getAdviceLinks(sensor.type, firstData.value) : [];
     let adviceLinksForSensor = {};
     if (adviceLinks.length > 0) {
         adviceLinksForSensor = {

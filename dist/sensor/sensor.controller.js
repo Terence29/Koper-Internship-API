@@ -23,34 +23,29 @@ let SensorController = class SensorController {
     async findAll() {
         const sensors = await this.sensorService.findAll();
         const sensorsWithLinks = await Promise.all(sensors.map(sensor => (0, sensor_utils_1.addHateoasLinks)(sensor)));
-        return sensors;
+        return sensorsWithLinks;
     }
     async findOne(id) {
-        let data;
         const sensor = await this.sensorService.findOne(Number(id));
         return sensor ? (0, sensor_utils_1.addHateoasLinks)(sensor) : null;
     }
     async create(sensor) {
         const createdSensor = await this.sensorService.create(sensor);
-        let data;
-        return (0, sensor_utils_1.addHateoasLinks)(createdSensor);
+        return createdSensor;
     }
     async update(id, sensor) {
         const updatedSensor = await this.sensorService.update(Number(id), sensor);
-        let data;
-        return updatedSensor ? (0, sensor_utils_1.addHateoasLinks)(updatedSensor) : null;
+        return updatedSensor;
     }
     async delete(id) {
         await this.sensorService.delete(Number(id));
     }
     async findBySensorType(type) {
         const sensors = await this.sensorService.findByType(type);
-        let data;
         return sensors.map(sensor => (0, sensor_utils_1.addHateoasLinks)(sensor));
     }
     async findByLocationType(location) {
         const sensors = await this.sensorService.findByLocation(location);
-        let data;
         return sensors.map(sensor => (0, sensor_utils_1.addHateoasLinks)(sensor));
     }
 };

@@ -28,7 +28,6 @@ import { DataEntity } from './sensor/entity/data.entity';
         database: configService.get('DB_NAME'),
         entities: [SensorEntity, DataEntity], 
         cache: false,
-        logging: true,  // Active les logs SQL
         synchronize: false,
       }),
       inject: [ConfigService]

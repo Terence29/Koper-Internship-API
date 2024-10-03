@@ -9,6 +9,7 @@ const path = require('path');
 const fs = require('fs');
 
 let adviceLinks: { [type: string]: { [range: string]: string } } = {};
+let globalSensorUtils: SensorUtils | null = null; // Utiliser une instance globale
 
 @Injectable()
 export class SensorUtils {
@@ -26,21 +27,21 @@ export class SensorUtils {
   }
 
   public async loadSensorAdviceFromExcel() {
-    const filePath = path.resolve(__dirname, '../../data/sensor-data.xlsx'); // Chemin complet vers le fichier Excel
+    const filePath = path.resolve(__dirname, '../../data/sensor-data.xlsx'); 
 
     // Lire le fichier XLSX
     const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0]; // Prendre la première feuille
+    const sheetName = workbook.SheetNames[0]; 
     const worksheet = workbook.Sheets[sheetName];
 
     // Convertir les données en tableau d'objets
     const data = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
 
     data.forEach(row => {
-      const type = row[0] as string; // Type de capteur
-      const minValue = row[1] as number; // Valeur minimale
-      const maxValue = row[2] as number; // Valeur maximale
-      const adviceLink = row[3] as string; // Lien de conseil
+      const type = row[0] as string; 
+      const minValue = row[1] as number; 
+      const maxValue = row[2] as number;
+      const adviceLink = row[3] as string;
 
       if (!adviceLinks[type]) {
         adviceLinks[type] = {};
@@ -49,8 +50,6 @@ export class SensorUtils {
       // Enregistrer le conseil dans l'objet adviceLinks
       adviceLinks[type][`${minValue}-${maxValue}`] = adviceLink;
     });
-
-    //console.log('Advice links loaded from Excel:', adviceLinks);
   }
 
   public getAdviceLinks(type: string, value: number): string[] {
@@ -118,6 +117,10 @@ export async function addRandomHateoasLinks(sensor: SensorEntity): Promise<any> 
 }
 
 export async function addHateoasLinks(sensor: SensorEntity): Promise<any> {
+  if (!globalSensorUtils) {
+    globalSensorUtils = new SensorUtils();
+    await globalSensorUtils.loadSensorAdviceFromExcel();
+  }
   const baseLinks = {
     self: {
       href: `/sensors/${sensor.name}`,
@@ -131,32 +134,32 @@ export async function addHateoasLinks(sensor: SensorEntity): Promise<any> {
       href: `/sensors/${sensor.name}`,
       method: 'DELETE',
     },
-    findByType: {
+    type: {
       href: `/sensors/`,
       params: `${sensor.type}`,
       method: 'GET',
     },
-    findByLocation: {
+    location: {
       href: `/sensors/`,
       params: `${sensor.location}`,
       method: 'GET',
     },
   };
-
-  const sensorUtils = new SensorUtils(); // Créer une nouvelle instance de SensorUtils
-  await sensorUtils.loadSensorAdviceFromExcel(); // Charger les conseils depuis le fichier Excel
-  const adviceLinks = sensorUtils.getAdviceLinks(sensor.type, sensor.data.values[1]); // Utiliser l'instance pour appeler getAdviceLinks
-
+  
+  const firstData = sensor.data && sensor.data.length > 0 ? sensor.data[0] : null;
+  const sensorUtils = new SensorUtils(); 
+  await sensorUtils.loadSensorAdviceFromExcel(); 
+  const adviceLinks = firstData ? sensorUtils.getAdviceLinks(sensor.type, firstData.value): [];
   let adviceLinksForSensor = {};
+  
   if (adviceLinks.length > 0) {
     adviceLinksForSensor = {
-    advice: adviceLinks.map(link => ({ href: link, method: 'GET' })),
+      advice: adviceLinks.map(link => ({ href: link, method: 'GET' })),
     };
   }
 
   return {
     ...sensor,
-    //...data,
     _links: {
       ...baseLinks,
       ...adviceLinksForSensor,

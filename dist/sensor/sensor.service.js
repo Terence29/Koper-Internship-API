@@ -22,7 +22,7 @@ let SensorService = class SensorService {
         this.sensorRepository = sensorRepository;
         this.protocol = [
             {
-                "clientId": '1',
+                "id": 1,
                 "name": "Broker Mosquitto",
                 "topic": "a",
                 "url": "INTERN"
@@ -30,7 +30,11 @@ let SensorService = class SensorService {
         ];
     }
     async findAll() {
-        return await this.sensorRepository.find({ relations: ['data'] });
+        const sensors = await this.sensorRepository.find({ relations: ['data'] });
+        return sensors.map(sensor => ({
+            ...sensor,
+            data: sensor.data ?? [],
+        }));
     }
     async findOne(id) {
         return await this.sensorRepository.findOne({
@@ -40,13 +44,13 @@ let SensorService = class SensorService {
     }
     async findByType(type) {
         return await this.sensorRepository.find({
-            where: { type },
+            where: { type: type },
             relations: ['data']
         });
     }
     async findByLocation(location) {
         return await this.sensorRepository.find({
-            where: { location },
+            where: { location: location },
             relations: ['data']
         });
     }
@@ -60,7 +64,7 @@ let SensorService = class SensorService {
     async update(id, updatedSensor) {
         const sensor = await this.sensorRepository.findOne({ where: { sensor_id: id } });
         if (sensor) {
-            const { id: _, ...sensorData } = updatedSensor;
+            const { sensor_id: _, ...sensorData } = updatedSensor;
             await this.sensorRepository.update(id, sensorData);
             return this.sensorRepository.findOne({ where: { sensor_id: id } });
         }

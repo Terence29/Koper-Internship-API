@@ -6,7 +6,7 @@ import { Sensor, TcpProtocol} from 'src/sensor/sensor.interface';
 @Injectable()
 export class TcpService {
     
-  private clients: { [id: string]: { socket: net.Socket, protocol: Partial<TcpProtocol> } } = {}; // Store TCP clients with their protocol param
+  private clients: { [id: number]: { socket: net.Socket, protocol: Partial<TcpProtocol> } } = {}; // Store TCP clients with their protocol param
    private readonly logger = new Logger(TcpService.name);
 
    connect(tcpProtocol : Partial<TcpProtocol>, sensor :  Sensor): void {
@@ -45,19 +45,19 @@ export class TcpService {
       this.logger.log(`Implement "sendToDatabase" tcp`); // HERE IMPLEMENT SENDTODATABASE
     }
 
-//@Cron('*/5 * * * * *') // Run every 5 seconds
-/*sendMessageToAllServers(): void {
-  console.log("test sendMessageToAllServers()");
+@Cron('*/5 * * * * *') // Run every 5 seconds
+sendMessageToAllServers(): void {
+  //console.log("test sendMessageToAllServers()");
    for (const clientId in this.clients) {
       const { socket, protocol } = this.clients[clientId];
       if (socket) {
          socket.write(protocol.request); // Send the specified request to TCP server
-         this.logger.log(`Sent request "${protocol.request}" to with ${clientId} to server (${protocol.host}:${protocol.port})`);
+         this.logger.log(`Sent request "${protocol.request}" with client id ${clientId} to server (${protocol.host}:${protocol.port})`);
       } else {
-         this.logger.warn(`Client with id ${clientId} not found.`);
+         this.logger.warn(`TCP Client with id ${clientId} not found.`);
       }
    }
-}*/
+}
 
   sendMessage(tcpProtocol: Partial<TcpProtocol>, message: string): void {
       const client = this.clients[tcpProtocol.id].socket;
@@ -65,7 +65,7 @@ export class TcpService {
         client.write(message); // Send message to TCP server
         this.logger.log(`Sent message to server ${tcpProtocol.host} and port ${tcpProtocol.port}: ${message}`);
       } else {
-        this.logger.warn(`Client with id ${tcpProtocol.id} not found.`);
+        this.logger.warn(`TCP Client with id ${tcpProtocol.id} not found.`);
       }
     }
 /*
