@@ -5,6 +5,7 @@ import { SensorService } from './sensor.service';
 import { DataExchangeModule } from 'src/data-exchange/data-exchange.module';
 import { HttpModule } from '@nestjs/axios';
 import { SensorEntity } from './entity/sensor.entity';
+import {DataEntity} from "src/sensor/entity/data.entity";
 import { SensorUtils } from './sensor.utils'
 
 @Module({ 

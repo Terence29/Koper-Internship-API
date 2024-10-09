@@ -13,12 +13,15 @@ const data_exchange_service_1 = require("./data-exchange.service");
 const mqtt_broker_service_1 = require("./mqtt-broker/mqtt-broker.service");
 const tcp_service_1 = require("./tcp/tcp.service");
 const schedule_1 = require("@nestjs/schedule");
+const sensor_entity_1 = require("../sensor/entity/sensor.entity");
+const data_entity_1 = require("../sensor/entity/data.entity");
+const typeorm_1 = require("@nestjs/typeorm");
 let DataExchangeModule = class DataExchangeModule {
 };
 exports.DataExchangeModule = DataExchangeModule;
 exports.DataExchangeModule = DataExchangeModule = __decorate([
     (0, common_1.Module)({
-        imports: [schedule_1.ScheduleModule.forRoot()],
+        imports: [schedule_1.ScheduleModule.forRoot(), typeorm_1.TypeOrmModule.forFeature([data_entity_1.DataEntity, sensor_entity_1.SensorEntity])],
         controllers: [data_exchange_controller_1.DataExchangeController],
         providers: [data_exchange_service_1.DataExchangeService, mqtt_broker_service_1.MqttBrokerService, tcp_service_1.TcpService],
         exports: [data_exchange_service_1.DataExchangeService, mqtt_broker_service_1.MqttBrokerService]

@@ -29,8 +29,9 @@ let SensorController = class SensorController {
         const sensor = await this.sensorService.findOne(Number(id));
         return sensor ? (0, sensor_utils_1.addHateoasLinks)(sensor) : null;
     }
-    async create(sensor) {
-        const createdSensor = await this.sensorService.create(sensor);
+    async create(body) {
+        const { sensor, protocol } = body;
+        const createdSensor = await this.sensorService.create(sensor, protocol);
         return createdSensor;
     }
     async update(id, sensor) {

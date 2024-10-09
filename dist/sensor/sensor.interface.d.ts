@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { IClientOptions } from 'mqtt';
 import * as net from 'net';
 export interface Sensor {

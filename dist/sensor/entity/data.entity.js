@@ -28,6 +28,10 @@ __decorate([
     __metadata("design:type", String)
 ], DataEntity.prototype, "unit", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
+    __metadata("design:type", Date)
+], DataEntity.prototype, "created_at", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => sensor_entity_1.SensorEntity, sensor => sensor.data),
     (0, typeorm_1.JoinColumn)({ name: 'sensor_id' }),
     __metadata("design:type", sensor_entity_1.SensorEntity)

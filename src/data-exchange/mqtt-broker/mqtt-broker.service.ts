@@ -1,11 +1,22 @@
 import { Injectable, Logger} from '@nestjs/common';
 import * as mqtt from 'mqtt';
 import { Sensor, MqttProtocol} from 'src/sensor/sensor.interface';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import {DataEntity} from "src/sensor/entity/data.entity";
+import { SensorEntity } from "src/sensor/entity/sensor.entity";
 
 @Injectable() 
 export class MqttBrokerService 
 {
    private brokers: { [id: number]: mqtt.MqttClient } = {}; // Store broker clients
+   constructor(
+    @InjectRepository(DataEntity)
+    private readonly dataRepository: Repository<DataEntity>,  // Le repository pour l'entité
+    @InjectRepository(SensorEntity)
+    private readonly sensorRepository: Repository<SensorEntity>  // Le repository pour l'entité
+  ){}
+   
    private readonly logger = new Logger(MqttBrokerService.name);
 
    addBroker(mqttProtocol : Partial<MqttProtocol>, sensor :  Sensor): void {
@@ -48,7 +59,10 @@ export class MqttBrokerService
         {
           const payload = message.toString();
           this.logger.log(`Message received on topic ${topic}: ${payload}`);
-          this.sendToDatabase(sensor, payload);
+                    //formatData(rawData); --> return payload(s) + unit(s) FORMAT REAL SENSOR DATA BEFORE SENDING, seperate payload and unit depending on returned data
+          const unit = "MQTT unit"
+          this.sendToDatabase(sensor, +payload, unit);
+
         });
       }
       else 
@@ -57,9 +71,16 @@ export class MqttBrokerService
       }
    }
 
-   private sendToDatabase(sensor: Sensor, payload: string): void
+   async sendToDatabase(sensor: Sensor, payload: number, unit: string): Promise<void>
     {
-      this.logger.log(`Implement "sendToDatabase" mqtt`); // HERE IMPLEMENT SENDTODATABASE
+      const sensorEntity = await this.sensorRepository.findOne({ where: { sensor_id: sensor.sensor_id } });
+      const newData = this.dataRepository.create({
+        value: payload,
+        unit: unit,
+        sensor : sensorEntity
+      });
+       // Save the data entity to the database
+      await this.dataRepository.save(newData);
     }
 
    deleteBroker(mqttProtocol: Partial<MqttProtocol>): void {

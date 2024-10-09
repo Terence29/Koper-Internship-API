@@ -8,13 +8,33 @@ It allows to retrieve data from various sensors (geolocation, type, etc.) and of
 ## Project setup
 
 ```bash
-$ npm install
+$ 
+$ npm install curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+$ # Download and install Node.js (you may need to restart the terminal)
+$ nvm install 20
 $ npm i -g @nestjs/cli
-$ npm install exceljs --save
-$ npm i --save @nestjs/microservices
-$ npm i --save mqtt
-$ npm i --save net
+$ npm install exceljs 
+$ npm i @nestjs/microservices
+$ npm i mqtt
+$ npm i net
+$ sudo apt install mariadb-server
+```
 
+## Install the database
+
+Use the script 'script.sql' the scripts folder to setup the database
+You can use the 'insertdata.sql' if you want to use data to test the application
+
+## Environment variables
+
+Create and complete the .env file with database connection information by following the example below :
+
+```bash
+DB_NAME=dbnameexample
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=dbusernameexample
+DB_PASSWORD=dbpwdexample
 ```
 
 ## Compile and run the project
@@ -43,15 +63,10 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Environment variables
+## Test the endpoints with Postman
 
-Create and complete the .env file with database connection information by following the example below :
-
-DB_NAME=dbnameexample
-DB_HOST=localhost
-DB_PORT=3306
-DB_USERNAME=dbusernameexample
-DB_PASSWORD=dbpwdexample
+If you are using VSCode, install the Postman extension
+You can import the HTTP requests in the postman folder, and test the GET localhost:3000/sensors
 
 ## Available features
 
@@ -65,5 +80,7 @@ DB_PASSWORD=dbpwdexample
 
 ## Technologies used
 
--NestJs framework
--Mysql Database
+-NestJS framework
+-MySQL Database
+-MQTT
+-net

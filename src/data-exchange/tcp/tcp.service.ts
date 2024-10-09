@@ -3,12 +3,22 @@ import { Cron } from '@nestjs/schedule';
 import * as net from 'net'; 
 import { Sensor, TcpProtocol} from 'src/sensor/sensor.interface';
 
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import {DataEntity} from "src/sensor/entity/data.entity";
+import { SensorEntity } from "src/sensor/entity/sensor.entity";
+
 @Injectable()
 export class TcpService {
     
   private clients: { [id: number]: { socket: net.Socket, protocol: Partial<TcpProtocol> } } = {}; // Store TCP clients with their protocol param
    private readonly logger = new Logger(TcpService.name);
-
+   constructor(
+    @InjectRepository(DataEntity)
+    private readonly dataRepository: Repository<DataEntity>,  // Le repository pour l'entité
+    @InjectRepository(SensorEntity)
+    private readonly sensorRepository: Repository<SensorEntity>  // Le repository pour l'entité
+  ){}
    connect(tcpProtocol : Partial<TcpProtocol>, sensor :  Sensor): void {
       if (this.clients[tcpProtocol.id]) {
         this.logger.warn(`Client with id ${tcpProtocol.id} already exists. list of clients ${this.clients}`);
@@ -32,7 +42,8 @@ export class TcpService {
         {
           const payload = message.toString();
           this.logger.log(`Message received from server adress ${tcpProtocol.host} and port ${tcpProtocol.port} : ${payload}`);
-          this.sendToDatabase(sensor, payload);
+          const unit = "TCP unit"
+          this.sendToDatabase(sensor, +payload, unit);
         });
 
       newSocket.on('close', () => {
@@ -40,9 +51,17 @@ export class TcpService {
         });
        this.clients[tcpProtocol.id] = { socket: newSocket, protocol: tcpProtocol };
    }
-   private sendToDatabase(sensor: Sensor, payload: string): void
+
+   async sendToDatabase(sensor: Sensor, payload: number, unit: string): Promise<void>
     {
-      this.logger.log(`Implement "sendToDatabase" tcp`); // HERE IMPLEMENT SENDTODATABASE
+      const sensorEntity = await this.sensorRepository.findOne({ where: { sensor_id: sensor.sensor_id } });
+      const newData = this.dataRepository.create({
+        value: payload,
+        unit: unit,
+        sensor : sensorEntity
+      });
+       // Save the data entity to the database
+      await this.dataRepository.save(newData);
     }
 
 @Cron('*/5 * * * * *') // Run every 5 seconds

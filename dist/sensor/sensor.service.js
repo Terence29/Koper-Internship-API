@@ -17,9 +17,11 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const sensor_entity_1 = require("./entity/sensor.entity");
+const data_exchange_service_1 = require("../data-exchange/data-exchange.service");
 let SensorService = class SensorService {
-    constructor(sensorRepository) {
+    constructor(sensorRepository, dataExchangeService) {
         this.sensorRepository = sensorRepository;
+        this.dataExchangeService = dataExchangeService;
         this.protocol = [
             {
                 "id": 1,
@@ -54,12 +56,23 @@ let SensorService = class SensorService {
             relations: ['data']
         });
     }
-    async create(sensor) {
+    async create(sensor, protocol) {
         const newSensor = this.sensorRepository.create({
             ...sensor,
             created_at: new Date(),
         });
-        return await this.sensorRepository.save(newSensor);
+        const savedSensor = await this.sensorRepository.save(newSensor);
+        const maxId = await this.getMaxSensorId();
+        sensor.sensor_id = maxId;
+        await this.dataExchangeService.addSensor(protocol, sensor);
+        return savedSensor;
+    }
+    async getMaxSensorId() {
+        const result = await this.sensorRepository
+            .createQueryBuilder('sensor')
+            .select('MAX(sensor.sensor_id)', 'max')
+            .getRawOne();
+        return result.max;
     }
     async update(id, updatedSensor) {
         const sensor = await this.sensorRepository.findOne({ where: { sensor_id: id } });
@@ -78,6 +91,7 @@ exports.SensorService = SensorService;
 exports.SensorService = SensorService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(sensor_entity_1.SensorEntity)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        data_exchange_service_1.DataExchangeService])
 ], SensorService);
 //# sourceMappingURL=sensor.service.js.map

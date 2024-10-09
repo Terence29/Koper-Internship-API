@@ -12,7 +12,10 @@ export class DataEntity {
 
   @Column()
   unit: string;
-
+  
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+    id: any;
   // Relation avec SensorEntity
   @ManyToOne(() => SensorEntity, sensor => sensor.data)
   @JoinColumn({ name: 'sensor_id' })

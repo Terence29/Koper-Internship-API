@@ -6,6 +6,7 @@ import { Sensor } from './sensor.interface';
 import { MqttProtocol } from './sensor.interface';
 import { HttpService } from '@nestjs/axios';
 import { async, lastValueFrom } from 'rxjs';
+import { DataExchangeService } from 'src/data-exchange/data-exchange.service';
 
 @Injectable()
 export class SensorService {
@@ -13,6 +14,7 @@ export class SensorService {
   constructor(
     @InjectRepository(SensorEntity)
     private readonly sensorRepository: Repository<SensorEntity>,  // Le repository pour l'entité
+    private readonly dataExchangeService: DataExchangeService // Injection du DataExchangeService
   ) {}
 
   private protocol: MqttProtocol[] = [
@@ -54,13 +56,29 @@ export class SensorService {
     });
   }
 
-  async create(sensor: Sensor): Promise<SensorEntity> {
+  async create(sensor: Sensor, protocol: string): Promise<SensorEntity> {
     const newSensor = this.sensorRepository.create({
       ...sensor,
       created_at: new Date(),
     });
-    return await this.sensorRepository.save(newSensor);
+    const savedSensor = await this.sensorRepository.save(newSensor);
+
+    const maxId = await this.getMaxSensorId();
+    sensor.sensor_id = maxId;
+    await this.dataExchangeService.addSensor(protocol, sensor);
+
+    return savedSensor;
   }
+
+  async getMaxSensorId(): Promise<number> {
+    const result = await this.sensorRepository
+      .createQueryBuilder('sensor')
+      .select('MAX(sensor.sensor_id)', 'max')
+      .getRawOne();
+    
+    return result.max; // This will return the max sensor_id
+  }
+
 
   async update(id: number, updatedSensor: Partial<Sensor>): Promise<SensorEntity> {
     const sensor = await this.sensorRepository.findOne({ where: { sensor_id: id } });

@@ -5,6 +5,7 @@ import * as xlsx from 'xlsx';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataEntity } from './entity/data.entity';
 
+// Requirements for the Excel extraction
 const path = require('path');
 const fs = require('fs');
 
@@ -15,9 +16,11 @@ let globalSensorUtils: SensorUtils | null = null; // Utiliser une instance globa
 export class SensorUtils {
   sensorRepository: any;
   constructor() {
+    // Construct the function in constructor
     this.loadSensorAdviceFromExcel();
   }
 
+  // Function to get the parameter for HATEOAS link construction
   public async getSensorField(field: string) {
     return await (await this.sensorRepository.createQueryBuilder('sensor')
       .select(`sensor.${field}`)
@@ -26,17 +29,19 @@ export class SensorUtils {
       .map(item => item.sensor_type);
   }
 
+  // Load advices from the Excel file in /data/sensor-data
   public async loadSensorAdviceFromExcel() {
     const filePath = path.resolve(__dirname, '../../data/sensor-data.xlsx'); 
 
-    // Lire le fichier XLSX
+    // Read XLSX file
     const workbook = xlsx.readFile(filePath);
     const sheetName = workbook.SheetNames[0]; 
     const worksheet = workbook.Sheets[sheetName];
 
-    // Convertir les données en tableau d'objets
+    // Convert data in array
     const data = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
 
+    // 
     data.forEach(row => {
       const type = row[0] as string; 
       const minValue = row[1] as number; 
@@ -47,11 +52,11 @@ export class SensorUtils {
         adviceLinks[type] = {};
       }
 
-      // Enregistrer le conseil dans l'objet adviceLinks
+      // Save advice in adviceLinks object
       adviceLinks[type][`${minValue}-${maxValue}`] = adviceLink;
     });
   }
-
+  // Function to get the advice in the list with the value and the type
   public getAdviceLinks(type: string, value: number): string[] {
     const sensorAdvice = adviceLinks[type];
     const adviceList: string[] = [];
@@ -70,7 +75,7 @@ export class SensorUtils {
   }  
 }
 
-// (Fisher-Yates Shuffle)
+// (Fisher-Yates Shuffle) for random HATEOAS links
 export async function shuffleArray(array: SensorEntity[]): Promise<any> {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -79,6 +84,7 @@ export async function shuffleArray(array: SensorEntity[]): Promise<any> {
   return array;
 }
 
+// Function to create the HATEOAS links
 export async function createHateoasLinks(sensor: SensorEntity): Promise<any> {
   return {
     self: {
@@ -106,6 +112,7 @@ export async function createHateoasLinks(sensor: SensorEntity): Promise<any> {
   };
 }
 
+// Function to add other HATEOAS links in existing links
 export async function addRandomHateoasLinks(sensor: SensorEntity): Promise<any> {
   const sensors = await this.getAllSensors();
 
@@ -116,6 +123,7 @@ export async function addRandomHateoasLinks(sensor: SensorEntity): Promise<any> 
   return selectedSensors.map(sensor => this.createHateoasLinks(sensor));
 }
 
+// Function to return HATEOAS links (construction of the HTTP response)
 export async function addHateoasLinks(sensor: SensorEntity): Promise<any> {
   if (!globalSensorUtils) {
     globalSensorUtils = new SensorUtils();

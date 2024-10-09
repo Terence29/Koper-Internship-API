@@ -24,8 +24,9 @@ export class SensorController {
   }
 
   @Post()
-  async create(@Body() sensor: Sensor): Promise<any> {
-    const createdSensor = await this.sensorService.create(sensor);
+  async create(@Body() body: { sensor: Sensor; protocol: string }): Promise<any> {
+    const { sensor, protocol } = body;
+    const createdSensor = await this.sensorService.create(sensor, protocol);
     return createdSensor;
   }
 

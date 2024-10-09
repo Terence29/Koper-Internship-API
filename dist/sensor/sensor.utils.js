@@ -9,7 +9,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addHateoasLinks = exports.addRandomHateoasLinks = exports.createHateoasLinks = exports.shuffleArray = exports.SensorUtils = void 0;
+exports.SensorUtils = void 0;
+exports.shuffleArray = shuffleArray;
+exports.createHateoasLinks = createHateoasLinks;
+exports.addRandomHateoasLinks = addRandomHateoasLinks;
+exports.addHateoasLinks = addHateoasLinks;
 const common_1 = require("@nestjs/common");
 const xlsx = require("xlsx");
 const path = require('path');
@@ -71,7 +75,6 @@ async function shuffleArray(array) {
     }
     return array;
 }
-exports.shuffleArray = shuffleArray;
 async function createHateoasLinks(sensor) {
     return {
         self: {
@@ -98,14 +101,12 @@ async function createHateoasLinks(sensor) {
         },
     };
 }
-exports.createHateoasLinks = createHateoasLinks;
 async function addRandomHateoasLinks(sensor) {
     const sensors = await this.getAllSensors();
     const shuffledSensors = this.shuffleArray(sensors);
     const selectedSensors = shuffledSensors.slice(0, 5);
     return selectedSensors.map(sensor => this.createHateoasLinks(sensor));
 }
-exports.addRandomHateoasLinks = addRandomHateoasLinks;
 async function addHateoasLinks(sensor) {
     if (!globalSensorUtils) {
         globalSensorUtils = new SensorUtils();
@@ -153,5 +154,4 @@ async function addHateoasLinks(sensor) {
         },
     };
 }
-exports.addHateoasLinks = addHateoasLinks;
 //# sourceMappingURL=sensor.utils.js.map
